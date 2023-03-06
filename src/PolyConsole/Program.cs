@@ -3,12 +3,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Application;
 using Microsoft.Extensions.DependencyInjection;
+using PolygonConsole;
 
 // Build a config object, using env vars and JSON providers.
 // IConfiguration config = new ConfigurationBuilder()
 //     .AddJsonFile("appsettings.json")
 //     .AddEnvironmentVariables()
 //     .Build();
+
+Console.Clear();
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
@@ -20,6 +23,7 @@ var host = Host.CreateDefaultBuilder(args)
         config.Timeout = new TimeSpan(0, 0, 30);
         config.DefaultRequestHeaders.Clear();
     });
+        services.AddSingleton<PolygonHandler>();
         // services.AddSingleton<MyInjectedClass>();
         // services.AddSingleton<Main>();
         // services.AddHostedService<MyHostedService>();
@@ -32,12 +36,26 @@ AnsiConsole.Write(
         .LeftAligned()
         .Color(Color.Red));
 
+var entry = app.Services.GetService<PolygonHandler>();
+while(true)
+{
+    AnsiConsole.MarkupLine("Working!");
+    entry.Run();
+}
+
+// AnsiConsole.MarkupLine("App complete!!");
+
+Environment.Exit(0);
+
+
+#region hidden
+
 // var logger = host.Services.GetRequiredService<ILogger<Program>>();
 // logger.LogDebug("Host created.");
 // host.Services.GetService<MyInjectedClass>().Execute().Wait();
 
 // AnsiConsole.Markup("[underline red]Hello[/] World!");
-AnsiConsole.Write(new Markup("[bold yellow]Hello[/] [red]World![/]"));
+// AnsiConsole.Write(new Markup("[bold yellow]Hello[/] [red]World![/]"));
 
 // if (!AnsiConsole.Confirm("Run prompt example?"))
 // {
@@ -48,11 +66,4 @@ AnsiConsole.Write(new Markup("[bold yellow]Hello[/] [red]World![/]"));
 //var name = AnsiConsole.Ask<string>("What's your [green]name[/]?");
 // return name;
 
-while(true)
-{
-
-}
-
-AnsiConsole.MarkupLine("App complete!! :)");
-
-Environment.Exit(0);
+#endregion

@@ -7,4 +7,9 @@ public class PolygonHandler
     {
         
     }
+
+    public async Task Run(){
+        Console.WriteLine("Running");
+        Thread.Sleep(1500);
+    }
 }
