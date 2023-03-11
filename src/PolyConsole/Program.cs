@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Application;
 using Microsoft.Extensions.DependencyInjection;
 using PolygonConsole;
+using Microsoft.Extensions.Logging;
 
 // Build a config object, using env vars and JSON providers.
 IConfiguration config = new ConfigurationBuilder()
@@ -26,8 +27,10 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddHttpClient();
         services.AddSingleton<PolygonHandler>();
     })
-    .ConfigureLogging(logging => {
-
+    .ConfigureLogging((context, logging) => {
+        logging.AddConfiguration(context.Configuration.GetSection("Logging"));
+        // logging.ClearProviders();
+        // logging.AddConsole();
     });
 
 
