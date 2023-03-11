@@ -6,10 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using PolygonConsole;
 
 // Build a config object, using env vars and JSON providers.
-// IConfiguration config = new ConfigurationBuilder()
-//     .AddJsonFile("appsettings.json")
-//     .AddEnvironmentVariables()
-//     .Build();
+IConfiguration config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .AddEnvironmentVariables()
+    .Build();
 
 Console.Clear();
 
@@ -17,17 +17,19 @@ var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
         services.AddApplication();
-        services.AddHttpClient("PolyClient", config =>
-    {
-        config.BaseAddress = new Uri("https://localhost:5001/api/");
-        config.Timeout = new TimeSpan(0, 0, 30);
-        config.DefaultRequestHeaders.Clear();
-    });
+        // services.AddHttpClient("PolyClient", config =>
+        // {
+        //     config.BaseAddress = new Uri("https://api.polygon.io/v2/aggs/ticker/");
+        //     config.Timeout = new TimeSpan(0, 0, 30);
+        //     config.DefaultRequestHeaders.Clear();
+        // });
+        services.AddHttpClient();
         services.AddSingleton<PolygonHandler>();
-        // services.AddSingleton<MyInjectedClass>();
-        // services.AddSingleton<Main>();
-        // services.AddHostedService<MyHostedService>();
+    })
+    .ConfigureLogging(logging => {
+
     });
+
 
 var app = host.Build();
 
@@ -39,8 +41,8 @@ AnsiConsole.Write(
 var entry = app.Services.GetService<PolygonHandler>();
 while(true)
 {
-    AnsiConsole.MarkupLine("Working!");
-    entry.Run();
+    //AnsiConsole.MarkupLine("Working!");
+    await entry.Run();
 }
 
 // AnsiConsole.MarkupLine("App complete!!");
