@@ -27,13 +27,20 @@ public class PolygonHandler
 
     public async Task Run(){
         //Console.WriteLine("Running");
-        var stockName = AnsiConsole.Ask<string>("Enter a [green]stock[/]?");
+        //var stockName = AnsiConsole.Ask<string>("Enter a [green]stock[/]?");
 
         List<string> dates = new List<string>();
         for(int i = 0; i <= 5; i++)
         {
             dates.Add(DateTime.Now.AddDays(-i).ToString("yyyy-MM-dd"));
         }
+
+        var ticker = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Select a[green] stock[/]?")
+                .PageSize(10)
+                .MoreChoicesText("[grey](Move up and down to reveal more stocks)[/]")
+                .AddChoices(tickers));
 
         var date = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -42,7 +49,7 @@ public class PolygonHandler
                 .MoreChoicesText("[grey](Move up and down to reveal more dates)[/]")
                 .AddChoices(dates));
 
-        await SearchForStock(stockName, date);
+        await SearchForStock(ticker, date);
         Thread.Sleep(150);
     }
 

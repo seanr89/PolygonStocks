@@ -48,9 +48,10 @@ while(true)
     await entry.Run();
 }
 
-// AnsiConsole.MarkupLine("App complete!!");
 
-Environment.Exit(0);
+//AnsiConsole.MarkupLine("App complete!!");
+
+// Environment.Exit(0);
 
 
 #region hidden
