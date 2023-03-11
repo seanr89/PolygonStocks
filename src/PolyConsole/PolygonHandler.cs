@@ -67,6 +67,7 @@ public class PolygonHandler
     /// <returns></returns>
     async Task SearchForStock(string stock, string date)
     {
+        Console.WriteLine("SearchForStock");
         try{
             var httpRequestMessage = new HttpRequestMessage(
             HttpMethod.Get,
@@ -76,25 +77,31 @@ public class PolygonHandler
 
             var httpClient = _httpClientFactory.CreateClient();
             httpClient.Timeout = TimeSpan.FromMinutes(1);
-            var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+            var resp = await httpClient.SendAsync(httpRequestMessage);
 
-            if (httpResponseMessage.IsSuccessStatusCode)
+            if (resp.IsSuccessStatusCode)
             {
-                var contentStream = await httpResponseMessage.Content.ReadAsStringAsync();
+                Console.WriteLine("If");
+                var contentStream = await resp.Content.ReadAsStringAsync();
                 var model = JsonConvert.DeserializeObject
                     <StockDaily>(contentStream);
 
                 AnsiConsole.Markup($"{model.ToString()}[/]");
             }
+            // else if(httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized){
+            //     Console.WriteLine("Else If");
+            //     AnsiConsole.Markup($"[underline red]Error![/] Unknown Error[/]");
+            // }
             else{
-                AnsiConsole.Markup($"[underline red]Error![/] {httpResponseMessage.StatusCode}[/]");
+                Console.WriteLine($"Else {resp.StatusCode}");
+                AnsiConsole.Write(new Markup($"Error![/] message: {resp.StatusCode} [/]"));
             }
-        }
-        catch(System.InvalidOperationException e)
+        }catch(System.InvalidOperationException e)
         {
             //TODO: but return
+            // AnsiConsole.Markup($"[underline red]Exception![/] {e.Message}[/]");
+            Console.WriteLine($"[underline red]Exception![/] {e.Message}[/]");
             return;
         }
-        
     }
 }

@@ -27,7 +27,7 @@ public static class Utils
             increment+=1;
         }while(dates[dateCount-1] != null);
 
-        //Console.WriteLine($"Returning Dates");
+        Console.WriteLine($"Returning Dates");
         return dates.AsEnumerable();
     }
 }
