@@ -44,32 +44,7 @@ AnsiConsole.Write(
 var entry = app.Services.GetService<PolygonHandler>();
 while(true)
 {
-    //AnsiConsole.MarkupLine("Working!");
+    if(entry == null)
+        Environment.Exit(1);
     await entry.Run();
 }
-
-
-//AnsiConsole.MarkupLine("App complete!!");
-
-// Environment.Exit(0);
-
-
-#region hidden
-
-// var logger = host.Services.GetRequiredService<ILogger<Program>>();
-// logger.LogDebug("Host created.");
-// host.Services.GetService<MyInjectedClass>().Execute().Wait();
-
-// AnsiConsole.Markup("[underline red]Hello[/] World!");
-// AnsiConsole.Write(new Markup("[bold yellow]Hello[/] [red]World![/]"));
-
-// if (!AnsiConsole.Confirm("Run prompt example?"))
-// {
-//     AnsiConsole.MarkupLine("Ok... :(");
-//     return;
-// }
-
-//var name = AnsiConsole.Ask<string>("What's your [green]name[/]?");
-// return name;
-
-#endregion

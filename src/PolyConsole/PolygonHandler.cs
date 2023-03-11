@@ -1,5 +1,6 @@
 
 using System.Net.Http.Headers;
+using Application;
 using Newtonsoft.Json;
 using PolygonConsole.Models;
 using Spectre.Console;
@@ -30,9 +31,15 @@ public class PolygonHandler
         //var stockName = AnsiConsole.Ask<string>("Enter a [green]stock[/]?");
 
         List<string> dates = new List<string>();
-        for(int i = 0; i <= 5; i++)
+        var weekDays = Utils.WeekDays(DateTime.Now, 5);
+        //Console.WriteLine($"day {weekDays.ToArray()[0].ToLongDateString()}");
+        // if(weekDays.Any())
+        //     Console.WriteLine($"weekDays");
+
+        foreach(var day in weekDays)
         {
-            dates.Add(DateTime.Now.AddDays(-i).ToString("yyyy-MM-dd"));
+            //Console.WriteLine($"day {day.ToLongDateString()}");
+            dates.Add(day.ToString("yyyy-MM-dd"));
         }
 
         var ticker = AnsiConsole.Prompt(
