@@ -26,16 +26,12 @@ public class PolygonHandler
         _httpClientFactory = httpClientFactory;
 
 
-    public async Task Run(){
+    public async Task<bool> Run(){
         //Console.WriteLine("Running");
         //var stockName = AnsiConsole.Ask<string>("Enter a [green]stock[/]?");
 
         List<string> dates = new List<string>();
         var weekDays = Utils.WeekDays(DateTime.Now, 5);
-        //Console.WriteLine($"day {weekDays.ToArray()[0].ToLongDateString()}");
-        // if(weekDays.Any())
-        //     Console.WriteLine($"weekDays");
-
         foreach(var day in weekDays)
         {
             //Console.WriteLine($"day {day.ToLongDateString()}");
@@ -56,8 +52,8 @@ public class PolygonHandler
                 .MoreChoicesText("[grey](Move up and down to reveal more dates)[/]")
                 .AddChoices(dates));
 
-        await SearchForStock(ticker, date);
-        Thread.Sleep(150);
+        return await SearchForStock(ticker, date);
+        //Thread.Sleep(150);
     }
 
     /// <summary>
@@ -65,7 +61,7 @@ public class PolygonHandler
     /// </summary>
     /// <param name="stock"></param>
     /// <returns></returns>
-    async Task SearchForStock(string stock, string date)
+    async Task<bool> SearchForStock(string stock, string date)
     {
         Console.WriteLine("SearchForStock");
         try{
@@ -88,20 +84,18 @@ public class PolygonHandler
 
                 AnsiConsole.Markup($"{model.ToString()}[/]");
             }
-            // else if(httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized){
-            //     Console.WriteLine("Else If");
-            //     AnsiConsole.Markup($"[underline red]Error![/] Unknown Error[/]");
-            // }
             else{
-                Console.WriteLine($"Else {resp.StatusCode}");
-                AnsiConsole.Write(new Markup($"Error![/] message: {resp.StatusCode} [/]"));
+                AnsiConsole.MarkupInterpolated($"[orange]Warn: message: {resp.StatusCode} [/]");
             }
+
+            if (!AnsiConsole.Confirm("Search again?"))
+                return false;
+
+            return true;
         }catch(System.InvalidOperationException e)
         {
-            //TODO: but return
-            // AnsiConsole.Markup($"[underline red]Exception![/] {e.Message}[/]");
-            Console.WriteLine($"[underline red]Exception![/] {e.Message}[/]");
-            return;
+            AnsiConsole.MarkupInterpolated($"[underline red]Exception![/] {e.Message}[/]");
+            return false;
         }
     }
 }

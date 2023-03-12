@@ -46,5 +46,7 @@ while(true)
 {
     if(entry == null)
         Environment.Exit(1);
-    await entry.Run();
+    bool result = await entry.Run();
+    if(!result)
+        Environment.Exit(100);
 }
