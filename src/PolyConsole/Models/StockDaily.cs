@@ -18,8 +18,7 @@ public record StockDaily
 
     public override string? ToString()
     {
-        //return base.ToString();
-        return String.Format("Stock:{0}, Open:{1} and Closed:{2} with a High of:{3}",symbol,open,close,high);
+        return String.Format("Stock - {0} - Opening value:{1} and Closed:{2} with a High of:{3}",symbol,open,close,high);
     }
 
     #endregion

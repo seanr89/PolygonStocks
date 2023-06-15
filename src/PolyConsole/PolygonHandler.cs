@@ -67,22 +67,24 @@ public class PolygonHandler
         try{
             var httpRequestMessage = new HttpRequestMessage(
             HttpMethod.Get,
-            $"https://api.polygon.io/v1/open-close/{stock.ToUpper()}/{date}?adjusted=true&apiKey=<xxxxxxxxxx>")
+            $"https://api.polygon.io/v1/open-close/{stock.ToUpper()}/{date}?adjusted=true&apiKey=xxxx")
             {
             };
 
             var httpClient = _httpClientFactory.CreateClient();
-            httpClient.Timeout = TimeSpan.FromMinutes(1);
+            httpClient.Timeout = TimeSpan.FromSeconds(15);
             var resp = await httpClient.SendAsync(httpRequestMessage);
 
             if (resp.IsSuccessStatusCode)
             {
-                Console.WriteLine("If");
                 var contentStream = await resp.Content.ReadAsStringAsync();
                 var model = JsonConvert.DeserializeObject
                     <StockDaily>(contentStream);
 
-                AnsiConsole.Markup($"{model.ToString()}[/]");
+                if(model != null)
+                    AnsiConsole.MarkupLine($"{model.ToString()}");
+                else
+                    AnsiConsole.MarkupLine("Unable to process data");
             }
             else{
                 AnsiConsole.MarkupInterpolated($"[orange]Warn: message: {resp.StatusCode} [/]");
